@@ -15,7 +15,7 @@ VirtualBox - Required for Vagrant
 5. cd /vagrant to change the directory
 6. Run $ python db_setup.py
 7. Populate the database running $ python basic.py
-8. Run python application.py
+8. Run python __init__.py
 9. Browse the App at this URL http://localhost:8000/catalog
 
 ### License
