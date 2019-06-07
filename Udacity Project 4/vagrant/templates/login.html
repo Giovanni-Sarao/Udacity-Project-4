@@ -1,6 +1,4 @@
 <!DOCTYPE html>
-<!--New google sign-in adoption is based on the github page below-->
-<!--https://gist.github.com/shyamgupta/d8ba035403e8165510585b805cf64ee6-->
 <html lang="en">
 
   <head>
@@ -8,14 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" type=text/css href="{{ url_for('static', filename='styles.css') }}">
-
+	<meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id" content="883758607392-cq1rhf0dbfkl1s3k4q7tuma7g4gtrso4.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="https://apis.google.com/js/client:platform.js?onload=start" async defer></script>
     <script>
       function start() {
         gapi.load('auth2', function() {
           auth2 = gapi.auth2.init({
-            client_id: '371645573383-v2t7gvqjc0hguh7fq71r1vons9141gb3'
+            client_id: '883758607392-cq1rhf0dbfkl1s3k4q7tuma7g4gtrso4.apps.googleusercontent.com'
           });
         });
       }
@@ -37,32 +36,24 @@
 
       <div class="container bg-light">
         <p>Sign in with Google</p>
-        <button type="button" class="btn btn-outline-primary" id="signinButton">Google Signin</button>
-        <span class="g-signin"
-          data-scope="openid email"
-          data-clientid="371645573383-v2t7gvqjc0hguh7fq71r1vons9141gb3.apps.googleusercontent.com"
-          data-redirecturi="postmessage"
-          data-accesstype="offline"
-          data-cookiepolicy="single_host_origin"
-          data-callback="signInCallback"
-          data-approvalprompt="force">
-        </span>
+        <div id="signinButton" class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
       </div>
     </div>
 
 <div id="result"></div>
 
     <script>
-    $('#signinButton').click(function() {
-      function signInCallback(authResult){
-        if (authResult['code']){
+    function onSignIn(googleUser) {
+        // Useful data for your client-side scripts:
+        var profile = googleUser.getBasicProfile();
+        // The ID token you need to pass to your backend:
+        var id_token = googleUser.getAuthResponse().id_token;
+      
           $('#signinButton').attr('style', 'display: none');
           $.ajax({
             type: 'POST',
             url: '/gconnect?state={{STATE}}',
-            headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-            },
+			      data: id_token,
             contentType: 'application/octet-stream; charset=utf-8',
             success:function(result){
               $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
@@ -70,17 +61,10 @@
                     window.location.href = "/index";
                    }, 2000);
             },
-            processData:false,
-            data:authResult['code']
+            processData:false
           });
-        } else{
-          // handle error
-          console.log('There was an error: ' + authResult['error']);
-          $('#result').html('Failed to make a server-side call. Check your configuration and console.');
-        }
+       
       }
-      auth2.grantOfflineAccess().then(signInCallback);
-    });
   </script>
   </body>
 </html>
