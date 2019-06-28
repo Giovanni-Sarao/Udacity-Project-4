@@ -6,8 +6,8 @@ This is a Python program for an catalog.
 2. Install Vagrant from https://www.vagrantup.com/
 3. Download the virtual machine configuration from Udacity https://github.com/udacity/fullstack-nanodegree-vm
 4. Start a virtual machine by the command "vagrant up", and log in using "vagrant ssh"
-5. Run Python database.py to populate
-6. Run Python application.py
+5. Run Python db_setup.py to populate
+6. Run Python project.py
 7. Open localhost:5000 and enjoy
 
 
